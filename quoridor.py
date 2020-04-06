@@ -125,57 +125,7 @@ class Quoridor:
                 raise QuoridorError("Un des murs horizontaux et un des murs verticaux se "
                                     "chevauchent")
 
-    def __str__(self):
-        """
-        Produire la représentation en art ascii correspondant à l'état actuel de la partie.
-        Cette représentation est la même que celle du TP précédent.
-        :returns: la chaîne de caractères de la représentation.
-        """
-        patron_carres = list(" | .   .   .   .   .   .   .   .   . |")
-        patron_murs = list("  |                                   |")
-        plateau = []
-
-        # génération du plateau vierge
-        num_ligne = 9
-        for i in range(17):
-            if i % 2:
-                plateau.append([*patron_murs])  # shallow copy du patron
-            else:
-                plateau.append([str(num_ligne)] + patron_carres)
-                num_ligne -= 1
-
-        id_joueurs = []
-
-        # plaçage des pions
-        for i, joueur in enumerate(self.etat["joueurs"]):
-            id_joueur = str(i + 1)
-            id_joueurs.append(f'{id_joueur}={joueur["nom"]}')
-            ligne = -2 * joueur["pos"][1] + 1
-            colonne = 4 * joueur["pos"][0]
-            plateau[ligne][colonne] = id_joueur
-
-        patron_mur_h = list("-------")
-
-        # plaçage des murs horizontaux
-        for mur_h in self.etat.get("murs")["horizontaux"]:
-            ligne = -2 * mur_h[1] + 2
-            colonne = 4 * mur_h[0] - 1
-            plateau[ligne][colonne: colonne + len(patron_mur_h)] = patron_mur_h
-
-        # plaçage des murs verticaux
-        for mur_v in self.etat.get("murs")["verticaux"]:
-            ligne = -2 * mur_v[1] + 1
-            colonne = 4 * mur_v[0] - 2
-            for i in range(ligne, ligne - 3, -1):
-                plateau[i][colonne] = "|"
-
-        # concaténation des morceaux du plateau
-        return "\n".join(["Légende: " + ", ".join(id_joueurs),
-                          "   -----------------------------------",
-                          *["".join(ligne) for ligne in plateau],
-                          "--|-----------------------------------",
-                          "  | 1   2   3   4   5   6   7   8   9"])
-
+   
     def déplacer_jeton(self, joueur, position):
         """
         Pour le joueur spécifié, déplacer son jeton à la position spécifiée.
@@ -209,9 +159,6 @@ class Quoridor:
         Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel
         de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un
         mur horizontal ou vertical.
-        :param joueur: un entier spécifiant le numéro du joueur (1 ou 2).
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si la partie est déjà terminée.
         """
         if self.partie_terminée():
             raise QuoridorError("La partie est déjà terminée")
