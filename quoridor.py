@@ -5,10 +5,6 @@ import networkx as nx
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
     """
     Crée le graphe des déplacements admissibles pour les joueurs.
-    :param joueurs: une liste des positions (x,y) des joueurs.
-    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
-    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
-    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
     """
     graphe = nx.DiGraph()
 
@@ -84,25 +80,7 @@ class QuoridorError(Exception):
 class Quoridor:
     """Classe implémentant le jeu Quoridor"""
 
-    @staticmethod
-    def pos_joueur_valide(pos_joueur):
-        """Vérifie si la position pos_joueur est valide"""
-        return isinstance(pos_joueur, (list, tuple)) and len(pos_joueur) == 2 and \
-            all(isinstance(x, int) and 1 <= x <= 9 for x in pos_joueur)
 
-    @staticmethod
-    def pos_mur_h_valide(mur_h):
-        """Vérifie si la position mur_h est valide"""
-        return isinstance(mur_h, (list, tuple)) and len(mur_h) == 2 and \
-            all(isinstance(x, int) for x in mur_h) and 1 <= mur_h[0] <= 8 and 2 <= mur_h[1] <= 9
-
-    @staticmethod
-    def pos_mur_v_valide(mur_v):
-        """Vérifie si la position mur_v est valide"""
-        return isinstance(mur_v, (list, tuple)) and len(mur_v) == 2 and \
-            all(isinstance(x, int) for x in mur_v) and 2 <= mur_v[0] <= 9 and 1 <= mur_v[1] <= 8
-
-    @classmethod
     def valider_murs(cls, murs_h, murs_v):
         """Vérifie si tous les murs sont valides"""
         for i, mur_h in enumerate(murs_h):
@@ -125,15 +103,59 @@ class Quoridor:
                 raise QuoridorError("Un des murs horizontaux et un des murs verticaux se "
                                     "chevauchent")
 
-   
+   def __str__(self):
+        """
+        Produire la représentation en art ascii correspondant à l'état actuel de la partie.
+        Cette représentation est la même que celle du TP précédent.
+        :returns: la chaîne de caractères de la représentation.
+        """
+        patron_carres = list(" | .   .   .   .   .   .   .   .   . |")
+        patron_murs = list("  |                                   |")
+        plateau = []
+
+        # génération du plateau vierge
+        num_ligne = 9
+        for i in range(17):
+            if i % 2:
+                plateau.append([*patron_murs])  # shallow copy du patron
+            else:
+                plateau.append([str(num_ligne)] + patron_carres)
+                num_ligne -= 1
+
+        id_joueurs = []
+
+        # plaçage des pions
+        for i, joueur in enumerate(self.etat["joueurs"]):
+            id_joueur = str(i + 1)
+            id_joueurs.append(f'{id_joueur}={joueur["nom"]}')
+            ligne = -2 * joueur["pos"][1] + 1
+            colonne = 4 * joueur["pos"][0]
+            plateau[ligne][colonne] = id_joueur
+
+        patron_mur_h = list("-------")
+
+        # plaçage des murs horizontaux
+        for mur_h in self.etat.get("murs")["horizontaux"]:
+            ligne = -2 * mur_h[1] + 2
+            colonne = 4 * mur_h[0] - 1
+            plateau[ligne][colonne: colonne + len(patron_mur_h)] = patron_mur_h
+
+        # plaçage des murs verticaux
+        for mur_v in self.etat.get("murs")["verticaux"]:
+            ligne = -2 * mur_v[1] + 1
+            colonne = 4 * mur_v[0] - 2
+            for i in range(ligne, ligne - 3, -1):
+                plateau[i][colonne] = "|"
+
+        # concaténation des morceaux du plateau
+        return "\n".join(["Légende: " + ", ".join(id_joueurs),
+                          "   -----------------------------------",
+                          *["".join(ligne) for ligne in plateau],
+                          "--|-----------------------------------",
+                          "  | 1   2   3   4   5   6   7   8   9"])
     def déplacer_jeton(self, joueur, position):
         """
         Pour le joueur spécifié, déplacer son jeton à la position spécifiée.
-        :param joueur: un entier spécifiant le numéro du joueur (1 ou 2).
-        :param position: le tuple (x, y) de la position du jeton (1<=x<=9 et 1<=y<=9).
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si la position est invalide (en dehors du damier).
-        :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
         if joueur not in (1, 2):
             raise QuoridorError("Le numéro du joueur est invalide")
@@ -228,7 +250,6 @@ class Quoridor:
     def partie_terminée(self):
         """
         Déterminer si la partie est terminée.
-        :returns: le nom du gagnant si la partie est terminée; False autrement.
         """
         joueur_1 = self.etat["joueurs"][0]
         joueur_2 = self.etat["joueurs"][1]
@@ -242,13 +263,6 @@ class Quoridor:
     def placer_mur(self, joueur, position, orientation):
         """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
-        :param joueur: le numéro du joueur (1 ou 2).
-        :param position: le tuple (x, y) de la position du mur.
-        :param orientation: l'orientation du mur ('horizontal' ou 'vertical').
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si un mur occupe déjà cette position.
-        :raises QuoridorError: si la position est invalide pour cette orientation.
-        :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
         if joueur not in (1, 2):
             raise QuoridorError("Le numéro du joueur est invalide")
