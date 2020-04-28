@@ -1,5 +1,4 @@
-"""Quoridor - module quoridorx"""
-# pylint: disable=no-member
+"""module quoridorx"""
 import turtle
 from quoridor import Quoridor
 

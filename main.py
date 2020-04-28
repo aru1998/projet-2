@@ -1,5 +1,5 @@
 """Quoridor - module main"""
-# pylint: disable=no-member
+
 import argparse
 import re
 import time
@@ -23,7 +23,7 @@ def analyser_commande():
     parser.add_argument("-x", dest="mode_graphique", action="store_true",
                         help="Jouer contre le serveur avec affichage graphique")
 
-    parser.add_argument("idul", help="IDUL du joueur")  # , nargs='?', default="phcas16")
+    parser.add_argument("idul", help="IDUL du joueur")
 
     return parser.parse_args()
 
@@ -40,8 +40,8 @@ def jouer_coup(args, q, id_partie):
     while not capture:
         if args.mode_graphique:
             entree = turtle.textinput(titre, question)
-            if entree is None:  # bouton Cancel ou X
-                turtle.mainloop()  # pause sur damier
+            if entree is None:  
+                turtle.mainloop() 
                 raise RuntimeError("Fenêtre fermée par le joueur")
         else:
             print(question, end=" ")
@@ -55,8 +55,6 @@ def jouer_coup(args, q, id_partie):
             try:
                 return api.jouer_coup(id_partie, entrees[0].upper(),
                                       (int(entrees[1]), int(entrees[2])))
-            # except StopIteration as gagnant:
-            #    gagnant = str(gagnant)
             except RuntimeError as message:
                 titre = str(message)
                 capture = None
@@ -103,7 +101,7 @@ def main():
         partie = jouer_coup(args, q, id_partie)
 
     if args.mode_graphique:
-        turtle.mainloop()  # pause sur damier
+        turtle.mainloop() 
     else:
         print("", q, "", f'{gagnant} a gagné la partie!', "", sep="\n")
 
