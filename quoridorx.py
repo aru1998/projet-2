@@ -27,13 +27,13 @@ class QuoridorX(Quoridor):
 
     def afficher(self):
         """Afficher le damier dans une fenêtre Turtle"""
-        # config damier
+        # configuration du damier
 
-        turtle.Screen().tracer(0, 0)  # gèle fenêtre
+        turtle.Screen().tracer(0, 0) 
         turtle.clear()
         turtle.penup()
 
-        # dessin damier
+        # damier
 
         turtle.color("lightgray")
         turtle.pensize(5)
@@ -52,11 +52,11 @@ class QuoridorX(Quoridor):
                 turtle.end_fill()
                 turtle.penup()
 
-        # config murs
+        # configuration pour les murs
 
         turtle.color("black")
 
-        # dessin murs h
+        #  murs horizontal
 
         turtle.setheading(0)
 
@@ -67,7 +67,7 @@ class QuoridorX(Quoridor):
             turtle.forward(self.LONGUEUR_MUR)
             turtle.penup()
 
-        # dessin murs v
+        #murs vertical
 
         turtle.setheading(90)
 
@@ -78,7 +78,7 @@ class QuoridorX(Quoridor):
             turtle.forward(self.LONGUEUR_MUR)
             turtle.penup()
 
-        # dessin pions
+        # pions
 
         turtle.color("white")
 
@@ -90,7 +90,7 @@ class QuoridorX(Quoridor):
                           self._pos_damier(joueur["pos"][1]))
             turtle.write(str(i+1), font=("", self.TAILLE_POLICE), align="center")
 
-        # dessin nombres
+        # nombres
 
         turtle.color("black")
 
@@ -127,18 +127,9 @@ class QuoridorX(Quoridor):
         else:
             turtle.title("QuoridorX")
 
-        turtle.update()  # dégèle fenêtre
-
+        turtle.update()
 
 # test
 if __name__ == "__main__":
-    QuoridorX(joueurs=[
-        {"nom": "henri", "murs": 0, "pos": (5, 1)},
-        {"nom": "robot", "murs": 0, "pos": (5, 9)}
-    ], murs={
-        "horizontaux": [(2, 2), (2, 3), (2, 4), (2, 5), (2, 6),
-                        (2, 7), (2, 8), (2, 9), (4, 2), (4, 3)],
-        "verticaux": [(2, 2), (2, 4), (2, 6), (2, 8), (4, 2),
-                      (4, 4), (4, 6), (4, 8), (6, 2), (6, 4)]
-    })
+    QuoridorX(joueurs=[], murs={})
     turtle.mainloop()

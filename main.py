@@ -1,8 +1,6 @@
 """Quoridor - module main"""
 
 import argparse
-import re
-import time
 import turtle
 
 import api
@@ -47,24 +45,6 @@ def jouer_coup(args, q, id_partie):
             print(question, end=" ")
             entree = input()
 
-        capture = re.search(r'^(D|MH|MV)\s+(\d)\s+(\d)$', entree.strip(), re.IGNORECASE)
-
-        if capture:
-            entrees = capture.groups()
-
-            try:
-                return api.jouer_coup(id_partie, entrees[0].upper(),
-                                      (int(entrees[1]), int(entrees[2])))
-            except RuntimeError as message:
-                titre = str(message)
-                capture = None
-                if not args.mode_graphique:
-                    print(titre)
-        else:
-            titre = "Erreur de syntaxe, veuillez réessayer."
-            if not args.mode_graphique:
-                print(titre)
-
 
 def main():
     """Boucle principale."""
@@ -88,10 +68,6 @@ def main():
         gagnant = q.partie_terminée()
         if gagnant:
             break
-
-        if args.mode_auto:
-            time.sleep(0.25)
-            q.jouer_coup(1)
 
         if args.mode_graphique:
             q.afficher()
