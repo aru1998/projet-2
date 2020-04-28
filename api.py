@@ -46,7 +46,5 @@ def jouer_coup(id_partie, type_coup, position):
 
     if "message" in rep.keys():
         raise RuntimeError(rep["message"])
-    # if "gagnant" in rep.keys():
-    #     raise StopIteration(rep["gagnant"])
 
     return rep["état"]
