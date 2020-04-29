@@ -13,7 +13,6 @@ class QuoridorError(Exception):
 
 def graphe_helper(murs_horizontaux, murs_verticaux):
     """la fonction construire_graphe
-   
     """
     graphe = nx.DiGraph()
     for x in range(1, 10):
@@ -332,9 +331,7 @@ class Quoridor:
 
     def partie_terminée(self):
         """
-
         Évalue si la partie est terminée
-
         """
        
         condition_de_victoire = [9, 1]
@@ -367,8 +364,7 @@ class Quoridor:
             raise QuoridorError("Il y a déjà un mur!")
 
     def check_positionv(self, position):
-        """fonction pour alléger le nombre de
-        branches 
+        """fonction pour alléger le nombre de branches 
         """
         if not 2 <= position[0] <= 9 or not 1 <= position[1] <= 8:
             raise QuoridorError("position du mur invalide!")
@@ -425,9 +421,4 @@ class Quoridor:
             self.joueurs[(joueur - 1)]['murs'] -= 1
         else:
             raise QuoridorError("orientation invalide!")
-
-
-
-if __name__ == '__main__':
-    import testquoridor
-    unittest.main(module=testquoridor.__name__, argv=[''], verbosity=2, exit=False)
+        

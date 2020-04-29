@@ -29,7 +29,7 @@ class QuoridorX(Quoridor):
         """Afficher le damier dans une fenêtre Turtle"""
         # configuration du damier
 
-        turtle.Screen().tracer(0, 0) 
+        turtle.Screen().tracer(0, 0)
         turtle.clear()
         turtle.penup()
 

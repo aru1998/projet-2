@@ -38,8 +38,8 @@ def jouer_coup(args, q, id_partie):
     while not capture:
         if args.mode_graphique:
             entree = turtle.textinput(titre, question)
-            if entree is None:  
-                turtle.mainloop() 
+            if entree is None:
+                turtle.mainloop()
                 raise RuntimeError("Fenêtre fermée par le joueur")
         else:
             print(question, end=" ")
@@ -77,7 +77,7 @@ def main():
         partie = jouer_coup(args, q, id_partie)
 
     if args.mode_graphique:
-        turtle.mainloop() 
+        turtle.mainloop()
     else:
         print("", q, "", f'{gagnant} a gagné la partie!', "", sep="\n")
 
