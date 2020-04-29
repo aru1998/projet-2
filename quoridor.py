@@ -1,5 +1,4 @@
 """Quoridor - module quoridor"""
-import unittest
 import copy
 import random
 import itertools
@@ -333,7 +332,6 @@ class Quoridor:
         """
         Évalue si la partie est terminée
         """
-       
         condition_de_victoire = [9, 1]
         # itérer sur chaque joueurs
         for numero, joueur in enumerate(self.joueurs):
@@ -364,7 +362,7 @@ class Quoridor:
             raise QuoridorError("Il y a déjà un mur!")
 
     def check_positionv(self, position):
-        """fonction pour alléger le nombre de branches 
+        """fonction pour alléger le nombre de branches
         """
         if not 2 <= position[0] <= 9 or not 1 <= position[1] <= 8:
             raise QuoridorError("position du mur invalide!")
