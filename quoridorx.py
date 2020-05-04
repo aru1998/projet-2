@@ -12,15 +12,15 @@ class QuoridorX(Quoridor):
     def __init__(self, joueurs, murs=None):
         super().__init__(joueurs, murs)
         self.fen = turtle.Screen()
-        self.bord = ((0, 0), (0, 10), (600, 10), (600, 0), (0, 0))
-        self.mur = ((0, 0), (0, 10), (-110, 10), (-110, 0), (0, 0))
-        self.pion = ((-10, -10), (10, -10), (10, 10), (-10, 10), (-10, -10)
         self.joe = turtle.Turtle()
         self.alex = turtle.Turtle()
         self.robot = turtle.Turtle()
         self.mure = turtle.Turtle()
         self.punto = turtle.Turtle()
-
+        self.bord = ((0, 0), (0, 10), (600, 10), (600, 0), (0, 0))
+        self.mur = ((0, 0), (0, 10), (-110, 10), (-110, 0), (0, 0))
+        self.pion = ((-10, -10), (10, -10), (10, 10), (-10, 10), (-10, -10)
+    
 
     def afficher(self):
         """
@@ -37,6 +37,11 @@ class QuoridorX(Quoridor):
         turtle.addshape('mur', self.mur)
 
         # On définie toutes nos turtles et on place leurs vitesses au max
+        self.joe = turtle.Turtle()
+        self.alex = turtle.Turtle()
+        self.robot = turtle.Turtle()
+        self.mure = turtle.Turtle()
+        self.punto = turtle.Turtle()
         self.joe.speed(0)
         self.alex.speed(0)
         self.robot.speed(0)
