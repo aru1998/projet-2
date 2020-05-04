@@ -1,8 +1,8 @@
 """ module quoridorX"""
 #pylint:disable=E1101
 
-from quoridor import Quoridor
 import turtle
+from quoridor import Quoridor
 
 
 class QuoridorX(Quoridor):
@@ -53,7 +53,7 @@ class QuoridorX(Quoridor):
         self.punto.backward(280)
 
         for i in range(1, 10):
-            for j in range (1, 10):
+            for j in range(1, 10):
                 x = (5 - i)*68 - 5
                 y = (j - 1)*68 + 10
                 self.punto.forward(y)
@@ -113,7 +113,6 @@ class QuoridorX(Quoridor):
         self.robot.backward(55)
         self.robot.left(90)
         self.robot.forward(290)
-        
         # On place le pion du joueur 1 en fonction des coordonées
         x = (5 - self.etat["joueurs"][0]["pos"][0])*68 - 5
         y = (self.etat["joueurs"][0]["pos"][1] - 1)*68 + 10
@@ -154,7 +153,6 @@ class QuoridorX(Quoridor):
             self.mure.backward(y)
             self.mure.right(90)
             self.mure.backward(x)
-        
         # On change le sens de la forme
         self.mure.right(90)
 
@@ -171,7 +169,6 @@ class QuoridorX(Quoridor):
             self.mure.backward(x)
             self.mure.right(90)
             self.mure.forward(y)
-        
         # On cache le turtle des murs 
         self.mure.fillcolor('black')
         self.mure.pencolor('black')
