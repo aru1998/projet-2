@@ -1,135 +1,199 @@
-"""module quoridorx"""
-import turtle
+""" module quoridorX"""
+#pylint:disable=E1101
+
 from quoridor import Quoridor
+import turtle
 
 
 class QuoridorX(Quoridor):
-    """Classe QuoridorX"""
-    TAILLE_CASE = 30
-    MARGE_CASE = 20
-    NB_RANGEES = 9
-    XY_OFFSET = - (TAILLE_CASE * NB_RANGEES + MARGE_CASE * (NB_RANGEES - 1)) / 2 \
-                - TAILLE_CASE - MARGE_CASE
-    XY_INCR = TAILLE_CASE + MARGE_CASE
-    TAILLE_POLICE = 18
-    LONGUEUR_MUR = TAILLE_CASE * 2.4 + MARGE_CASE
-    RECUL_MUR = TAILLE_CASE * 0.2
-    OFFSET_MUR = MARGE_CASE / 2
-    OFFSET_PION = TAILLE_CASE / 2
-    TAILLE_PION = 30
+    """
+    Classe Quoridor
+    """
+    def __init__(self, joueurs, murs=None):
+        super().__init__(joueurs, murs)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.afficher()
-
-    def _pos_damier(self, num_case):
-        return num_case * self.XY_INCR + self.XY_OFFSET
 
     def afficher(self):
-        """Afficher le damier dans une fenêtre Turtle"""
-        # configuration du damier
+        """
+        Fonction pour afficher le jeu en mode graphique
+        """
 
-        turtle.Screen().tracer(0, 0)
-        turtle.clear()
-        turtle.penup()
+        # On crée la fenêtre
+        self.fen = turtle.Screen()
+        self.fen.title("Jeu Quoridor")
+        self.fen.setup(width=800, height=800)
 
-        # damier
+        # On définie nos formes, les bords, les murs et les pions
+        self.bord = ((0, 0), (0, 10), (600, 10), (600, 0), (0, 0))
+        self.mur = ((0, 0), (0, 10), (-110, 10), (-110, 0), (0, 0))
+        self.pion = ((-10, -10), (10, -10), (10, 10), (-10, 10), (-10, -10))
+        turtle.addshape('pion', self.pion)
+        turtle.addshape('bord', self.bord)
+        turtle.addshape('mur', self.mur)
 
-        turtle.color("lightgray")
-        turtle.pensize(5)
-        turtle.setheading(90)
+        # On définie toutes nos turtles et on place leurs vitesses au max
+        self.joe = turtle.Turtle()
+        self.alex = turtle.Turtle()
+        self.robot = turtle.Turtle()
+        self.mure = turtle.Turtle()
+        self.punto = turtle.Turtle()
+        self.joe.speed(0)
+        self.alex.speed(0)
+        self.robot.speed(0)
+        self.mure.speed(0)
+        self.punto.speed(0)
 
-        for x in range(1, self.NB_RANGEES + 1):
-            for y in range(1, self.NB_RANGEES + 1):
-                turtle.setpos(self._pos_damier(x), self._pos_damier(y))
-                turtle.pendown()
-                turtle.begin_fill()
+        # On fait un cadrillage pour les positions de points
 
-                for _ in range(4):
-                    turtle.forward(self.TAILLE_CASE)
-                    turtle.right(90)
+        self.punto.penup()
+        self.punto.pencolor('black')
+        self.punto.fillcolor('black')
+        self.punto.backward(55)
+        self.punto.left(90)
+        self.punto.backward(280)
 
-                turtle.end_fill()
-                turtle.penup()
+        for i in range(1, 10):
+            for j in range (1, 10):
+                x = (5 - i)*68 - 5
+                y = (j - 1)*68 + 10
+                self.punto.forward(y)
+                self.punto.left(90)
+                self.punto.forward(x)
+                self.punto.dot(5)
+                self.punto.backward(x)
+                self.punto.right(90)
+                self.punto.backward(y)
 
-        # configuration pour les murs
+        # On trace les bords du plateau
+        # On va ce placer dans le coin inférieur droit du plateau
+        self.joe.penup()
+        self.joe.backward(350)
+        self.joe.left(90)
+        self.joe.forward(300)
+        self.joe.pendown()
+        self.joe.shape('bord')
+        self.joe.pencolor('black')
+        self.joe.fillcolor('black')
+        self.joe.stamp()
 
-        turtle.color("black")
+        # On fait tous les bords un par un
+        self.joe.penup()
+        self.joe.right(90)
+        self.joe.forward(590)
+        self.joe.pendown()
+        self.joe.stamp()
 
-        #  murs horizontal
+        self.joe.penup()
+        self.joe.right(90)
+        self.joe.forward(590)
+        self.joe.pendown()
+        self.joe.stamp()
 
-        turtle.setheading(0)
+        self.joe.penup()
+        self.joe.right(90)
+        self.joe.forward(590)
+        self.joe.pendown()
+        self.joe.stamp()
+        self.joe.penup()
 
-        for mur_h in self.etat.get("murs")["horizontaux"]:
-            turtle.setpos(self._pos_damier(mur_h[0]) - self.RECUL_MUR,
-                          self._pos_damier(mur_h[1]) - self.OFFSET_MUR)
-            turtle.pendown()
-            turtle.forward(self.LONGUEUR_MUR)
-            turtle.penup()
+        # On définie le pion du joueur 1 en rouge
+        self.alex.shape('pion')
+        self.alex.penup()
+        self.alex.pencolor('red')
+        self.alex.fillcolor('red')
+        self.alex.backward(55)
+        self.alex.left(90)
+        self.alex.backward(280)
 
-        #murs vertical
+        # On définie le pion du joueur 2 en vert
+        self.robot.shape('pion')
+        self.robot.penup()
+        self.robot.pencolor('green')
+        self.robot.fillcolor('green')
+        self.robot.backward(55)
+        self.robot.left(90)
+        self.robot.forward(290)
+        
+        # On place le pion du joueur 1 en fonction des coordonées
+        x = (5 - self.etat["joueurs"][0]["pos"][0])*68 - 5
+        y = (self.etat["joueurs"][0]["pos"][1] - 1)*68 + 10
+        self.alex.forward(y)
+        self.alex.left(90)
+        self.alex.forward(x)
 
-        turtle.setheading(90)
+        # On place le pion du joueur 2 en fonction des coordonées
+        x = (5 - self.etat["joueurs"][1]["pos"][0])*68 - 5
+        y = (9 - self.etat["joueurs"][1]["pos"][1])*68 +16
+        self.robot.backward(y)
+        self.robot.right(90)
+        self.robot.backward(x)
 
-        for mur_v in self.etat.get("murs")["verticaux"]:
-            turtle.setpos(self._pos_damier(mur_v[0]) - self.OFFSET_MUR,
-                          self._pos_damier(mur_v[1]) - self.RECUL_MUR)
-            turtle.pendown()
-            turtle.forward(self.LONGUEUR_MUR)
-            turtle.penup()
+        # On place ce place à l'origine pour les murs
 
-        # pions
+        # On définie la couleur des murs et sa position d'origines
+        self.mure.shape('mur')
+        self.mure.penup()
+        self.mure.pencolor('blue')
+        self.mure.fillcolor('blue')
+        self.mure.backward(370)
+        self.mure.right(90)
+        self.mure.forward(300)
+        self.mure.left(90)
 
-        turtle.color("white")
+        # On place d'abord tous les murs verticaux un par un en lisant la liste
+        for liste in self.etat["murs"]["verticaux"]:
+            print('Je suis dans la liste de V')
+            x = (liste[0] - 1)*68 + 10
+            y = (liste[1] - 1)*68 + 15
+            self.mure.forward(x)
+            self.mure.left(90)
+            self.mure.forward(y)
+            self.mure.right(90)
+            self.mure.stamp()
+            self.mure.left(90)
+            self.mure.backward(y)
+            self.mure.right(90)
+            self.mure.backward(x)
+        
+        # On change le sens de la forme
+        self.mure.right(90)
 
-        for i, joueur in enumerate(self.etat["joueurs"]):
-            turtle.setpos(self._pos_damier(joueur["pos"][0]) + self.OFFSET_PION,
-                          self._pos_damier(joueur["pos"][1]) + self.OFFSET_PION)
-            turtle.dot(self.TAILLE_PION, "forestgreen" if i == 0 else "firebrick")
-            turtle.setpos(self._pos_damier(joueur["pos"][0]) + self.OFFSET_PION,
-                          self._pos_damier(joueur["pos"][1]))
-            turtle.write(str(i+1), font=("", self.TAILLE_POLICE), align="center")
+        # On place les murs horizontaux
+        for liste in self.etat["murs"]["horizontaux"]:
+            x = (liste[0] - 1)*68 + 30
+            y = (liste[1] - 1)*68
+            self.mure.backward(y)
+            self.mure.left(90)
+            self.mure.forward(x)
+            self.mure.right(90)
+            self.mure.stamp()
+            self.mure.left(90)
+            self.mure.backward(x)
+            self.mure.right(90)
+            self.mure.forward(y)
+        
+        # On cache le turtle des murs 
+        self.mure.fillcolor('black')
+        self.mure.pencolor('black')
+        self.mure.left(90)
+        self.mure.forward(10)
+        self.mure.right(90)
+        self.mure.backward(10)
 
-        # nombres
-
-        turtle.color("black")
-
-        for i in range(1, self.NB_RANGEES+1):
-            turtle.setpos(self._pos_damier(i) + self.OFFSET_PION,
-                          self._pos_damier(0) + self.OFFSET_PION)  # hor
-            turtle.write(str(i), font=("", self.TAILLE_POLICE), align="center")
-            turtle.setpos(self._pos_damier(0) + self.TAILLE_CASE,
-                          self._pos_damier(i))  # ver
-            turtle.write(str(i), font=("", self.TAILLE_POLICE), align="center")
-
-        # dessin légende
-
-        id_joueurs = [f'{i+1}={joueur["nom"]}' for i, joueur in enumerate(self.etat["joueurs"])]
-        turtle.setpos(self._pos_damier(1), self._pos_damier(10) - self.MARGE_CASE/2)
-        turtle.write("Légende: " + ", ".join(id_joueurs), font=("", 14))
-
-        # plaçage des pions
-
-        for i, joueur in enumerate(self.etat["joueurs"]):
-            id_joueur = str(i + 1)
-            id_joueurs.append(f'{id_joueur}={joueur["nom"]}')
-
-        # affichage
-
-        turtle.hideturtle()
-
-        gagnant = self.partie_terminée()
-        if gagnant:
-            turtle.title(f'QuoridorX - {gagnant} a gagné la partie!')
-            turtle.bgcolor("forestgreen"
-                           if gagnant == self.etat["joueurs"][0]["nom"] else
-                           "firebrick")
-        else:
-            turtle.title("QuoridorX")
-
-        turtle.update()
-
-# test
-if __name__ == "__main__":
-    QuoridorX(joueurs=[], murs={})
-    turtle.mainloop()
+        # On demande à l'utilisateur son prochain coup
+        coup_invalide = True
+        while coup_invalide:
+            self.coup = self.fen.textinput("Vos coups", "Entrez votre type coups:")
+            if self.coup in ["q", "Q"]:
+                break
+            print(self.coup)
+            try:
+                self.coup = self.coup.split(" ")
+                if self.coup[0] not in ("D", "MH", "MV"):
+                    raise ValueError
+                self.coup = self.coup[0], [int(self.coup[1]), int(self.coup[2])]
+                coup_invalide = False
+            except:
+                print("Mauvaise entrée. Réessayez")
+                coup_invalide = True
+        self.fen.clear()

@@ -1,4 +1,5 @@
 """Quoridor - module main"""
+#pylint:disable=E1101
 
 import argparse
 import turtle
@@ -34,6 +35,7 @@ def jouer_coup(args, q, id_partie):
     capture = None
     titre = "C'est votre tour!"
     question = "Entrez votre prochain coup sous la forme (D|MH|MV) x y :"
+    
 
     while not capture:
         if args.mode_graphique:

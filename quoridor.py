@@ -1,4 +1,6 @@
-"""Quoridor - module quoridor"""
+""" module quoridor"""
+#pylint:disable=E1101
+
 import copy
 import random
 import itertools
